@@ -16,8 +16,10 @@ class MovieMapper {
       popularity: moviedb.popularity,
       posterPath: (moviedb.posterPath != '')
         ? 'https://image.tmdb.org/t/p/w500${ moviedb.posterPath }'
-        : 'https://sd.keepcalms.com/i-w600/keep-calm-poster-not-found.jpg',
-      releaseDate: moviedb.releaseDate,
+        : 'https://www.prokerala.com/movies/assets/img/no-poster-available.jpg',
+      releaseDate: moviedb.releaseDate != null 
+        ? moviedb.releaseDate!
+        : DateTime.now(),
       title: moviedb.title,
       video: moviedb.video,
       voteAverage: moviedb.voteAverage,
