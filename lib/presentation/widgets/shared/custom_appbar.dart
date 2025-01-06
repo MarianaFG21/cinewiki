@@ -47,7 +47,7 @@ class CustomAppbar extends ConsumerWidget {
 
                   // Verificar si el widget sigue montado antes de usar el contexto
                   if (movie != null && context.mounted) {
-                    context.push('/movie/${movie.id}');
+                    context.push('/home/0/movie/${movie.id}');
                   }
                 },
                 icon: Icon(

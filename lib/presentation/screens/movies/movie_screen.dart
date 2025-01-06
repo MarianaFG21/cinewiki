@@ -195,6 +195,13 @@ class _ActorsByMovie extends ConsumerWidget {
   }
 }
 
+
+
+final isFavoriteProvider = FutureProvider.family.autoDispose((ref, int movieId) {
+  final localStorageRepository = ref.watch(localStorageRepositoryProvider);
+  return localStorageRepository.isMovieFavorite(movieId);
+});
+
 class _CustomSliverAppBar extends ConsumerWidget {
   final Movie movie;
 
@@ -202,6 +209,9 @@ class _CustomSliverAppBar extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, ref) {
+
+    final isFavoriteFuture = ref.watch(isFavoriteProvider(movie.id));
+
     final size = MediaQuery.of(context).size;
 
     return SliverAppBar(
@@ -210,16 +220,24 @@ class _CustomSliverAppBar extends ConsumerWidget {
       foregroundColor: Colors.white,
       actions: [
         //!ESTE BOTON LO QUIERO USAR PARA COMPARTIR LA PELICULA
-        // IconButton(
-        //   icon: Icon(Icons.share),
-        //   onPressed: () {},
-        // ),
+        IconButton(
+          onPressed: () {},
+          icon: Icon(Icons.share),
+        ),
         IconButton(
           onPressed: () {
             ref.watch(localStorageRepositoryProvider).toggleFavorite(movie);
+            ref.invalidate(isFavoriteProvider(movie.id));
             
           },
-          icon: Icon(Icons.favorite_border),
+          icon: isFavoriteFuture.when(
+            loading: () => CircularProgressIndicator(strokeWidth: 2),
+            data: (isFavorite) => isFavorite 
+              ? Icon(Icons.favorite, color: Colors.red) 
+              : Icon(Icons.favorite_border),
+            error: (_, __) => throw UnimplementedError(), 
+            )
+          // Icon(Icons.favorite_border),
         ),
         
       ],
